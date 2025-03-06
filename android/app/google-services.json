@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "257543937520",
+    "project_id": "biodata-sabtu",
+    "storage_bucket": "biodata-sabtu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257543937520:android:db6f17b032e8872a6b9135",
+        "android_client_info": {
+          "package_name": "com.abw.biodata"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwo--NwYmy3uKzlg1CYziSOi1qKhSG9DE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
