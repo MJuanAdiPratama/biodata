@@ -1,5 +1,4 @@
 // ignore_for_file: file_names, non_constant_identifier_names
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'BiodataService.dart';
@@ -38,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (selectedDocId != null) {
+      // Update data jika ada selectedDocId
       await service?.update(selectedDocId!, {
         'name': name,
         'age': age,
@@ -45,9 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
       });
       selectedDocId = null;
     } else {
+      // Tambah data baru jika selectedDocId null
       await service?.add({'name': name, 'age': age, 'address': address});
     }
 
+    // Bersihkan input setelah menambah/memperbarui
     nameController.clear();
     ageController.clear();
     addressController.clear();
@@ -62,13 +64,11 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Tambahkan judul Form Biodata
               const Text(
                 "Form Biodata",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 16), // Beri jarak sebelum input
-
+              const SizedBox(height: 16),
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(hintText: 'Name'),
@@ -84,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 controller: addressController,
                 decoration: const InputDecoration(hintText: 'Address'),
               ),
+              const SizedBox(height: 16),
               Expanded(
                 child: StreamBuilder(
                   stream: service?.getBiodata(),
@@ -93,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.hasData &&
+                    } else if (!snapshot.hasData ||
                         snapshot.data?.docs.isEmpty == true) {
                       return const Center(child: Text('No data available'));
                     }
@@ -104,14 +105,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemCount: documents?.length,
                       itemBuilder: (context, index) {
                         final docId = documents?[index].id;
+                        final data = documents?[index].data();
+
                         return ListTile(
-                          title: Text(documents?[index]['name']),
-                          subtitle: Text(documents?[index]['age']),
+                          title: Text(data?['name'] ?? 'No Name'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Age: ${data?['age'] ?? 'N/A'}'),
+                              Text('Address: ${data?['address'] ?? 'N/A'}'),
+                            ],
+                          ),
                           onTap: () {
-                            nameController.text = documents?[index]['name'];
-                            ageController.text = documents?[index]['age'];
-                            addressController.text =
-                                documents?[index]['address'];
+                            nameController.text = data?['name'] ?? '';
+                            ageController.text = data?['age'] ?? '';
+                            addressController.text = data?['address'] ?? '';
                             selectedDocId = docId;
                           },
                           trailing: IconButton(
