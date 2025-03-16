@@ -1,3 +1,4 @@
 # biodata
 Aplikasi Flutter yang menggunakan firebase untuk menyimpan dan mengelola data biodata.
-![alt text](images/biodata.jpg)
+
+<img src="images/biodata.jpg" alt="Deskripsi Gambar" width="300">

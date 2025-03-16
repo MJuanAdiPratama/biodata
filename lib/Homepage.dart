@@ -53,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
     nameController.clear();
     ageController.clear();
     addressController.clear();
+    setState(() {});
   }
 
   @override
@@ -96,7 +97,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData ||
                         snapshot.data?.docs.isEmpty == true) {
-                      return const Center(child: Text('No data available'));
+                      return const Center(
+                        child: Text('Tidak ada data, Tambahkan data baru.'),
+                      );
                     }
                     final documents = snapshot.data?.docs;
                     return ListView.builder(
@@ -121,14 +124,33 @@ class _MyHomePageState extends State<MyHomePage> {
                             ageController.text = data?['age'] ?? '';
                             addressController.text = data?['address'] ?? '';
                             selectedDocId = docId;
+                            setState(() {});
                           },
-                          trailing: IconButton(
-                            onPressed: () {
-                              if (docId != null) {
-                                service?.delete(docId);
-                              }
-                            },
-                            icon: const Icon(Icons.delete),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  if (docId != null) {
+                                    nameController.text = data?['name'] ?? '';
+                                    ageController.text = data?['age'] ?? '';
+                                    addressController.text =
+                                        data?['address'] ?? '';
+                                    selectedDocId = docId;
+                                    setState(() {});
+                                  }
+                                },
+                                icon: const Icon(Icons.edit),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  if (docId != null) {
+                                    service?.delete(docId);
+                                  }
+                                },
+                                icon: const Icon(Icons.delete),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -142,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addOrUpdateBiodata,
-        child: const Icon(Icons.add),
+        child: Icon(selectedDocId == null ? Icons.add : Icons.edit),
       ),
     );
   }
